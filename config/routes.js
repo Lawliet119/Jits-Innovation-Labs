@@ -8,7 +8,7 @@
 module.exports.routes = {
 
   // Frontend page.
-  'GET /': 'ClicksController.index',
+  'GET /': 'PingController.index',
 
   // API routes use POST and return the project response envelope.
   'POST /api/v1/ping': 'PingController.ping',

@@ -51,7 +51,7 @@ default: {
 File `config/routes.js` khai bao:
 
 ```js
-'GET /': 'ClicksController.index',
+'GET /': 'PingController.index',
 'POST /api/v1/ping': 'PingController.ping',
 ```
 
@@ -111,7 +111,7 @@ Luong request cua chuc nang ping:
 
 1. Browser mo `GET /`.
 2. Sails doc route trong `config/routes.js`.
-3. Route `GET /` goi `ClicksController.index`.
+3. Route `GET /` goi `PingController.index`.
 4. Controller render `views/pages/homepage.ejs` va tra HTML ve browser.
 5. Nguoi dung bam nut `Ping`.
 6. Browser goi `POST /api/v1/ping`.
