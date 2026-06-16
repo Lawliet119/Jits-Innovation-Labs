@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ping Pong</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        background: #f6f7f9;
+        color: #1f2937;
+        font-family: Arial, sans-serif;
+      }
+
+      main {
+        width: min(100% - 32px, 440px);
+        text-align: center;
+      }
+
+      h1 {
+        margin: 0 0 24px;
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      button {
+        min-width: 112px;
+        min-height: 44px;
+        border: 0;
+        border-radius: 6px;
+        background: #2563eb;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      button:disabled {
+        cursor: wait;
+        opacity: .7;
+      }
+
+      #result {
+        min-height: 24px;
+        margin-top: 18px;
+        font-family: Consolas, monospace;
+        font-size: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Ping Pong</h1>
+      <button id="pingBtn" type="button">Ping</button>
+      <div id="result" aria-live="polite"></div>
+    </main>
+
+    <script>
+    (function() {
+      var pingBtn = document.getElementById('pingBtn');
+      var result = document.getElementById('result');
+
+      pingBtn.addEventListener('click', async function() {
+        pingBtn.disabled = true;
+        result.textContent = 'Loading...';
+
+        try {
+          var response = await fetch('/api/v1/ping', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+          });
+          var payload = await response.json();
+          result.textContent = 'err: ' + payload.err + ' | message: ' + payload.message;
+        } catch (error) {
+          result.textContent = 'err: 500 | message: cannot reach backend';
+        } finally {
+          pingBtn.disabled = false;
+        }
+      });
+    })();
+    </script>
+  </body>
+</html>
