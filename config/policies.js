@@ -10,7 +10,19 @@
 
 module.exports.policies = {
 
-  // Cho phép tất cả request đi qua (không cần đăng nhập)
-  '*': true,
+  /***************************************************************************
+  *                                                                          *
+  * Default policy for all controllers and actions, unless overridden.       *
+  * (`true` allows public access)                                            *
+  *                                                                          *
+  ***************************************************************************/
+
+  '*': false,
+
+  AccessController: {
+    register: true,
+    login: true,
+    logout: 'isLoggedIn'
+  },
 
 };
