@@ -1,3 +1,8 @@
+/**
+ * respCode.js
+ * 
+ * @description :: Defines standard response codes and messages for the API.
+ */
 module.exports = {
   SUCCESS: {
     code: 200,
