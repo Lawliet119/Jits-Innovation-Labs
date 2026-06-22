@@ -25,4 +25,13 @@ module.exports.policies = {
     logout: 'isLoggedIn'
   },
 
+  PocketController: {
+    balance: 'isLoggedIn'
+  },
+
+  TransactionController: {
+    transfer: 'isLoggedIn',
+    history: 'isLoggedIn'
+  },
+
 };

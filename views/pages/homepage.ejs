@@ -1,94 +1,105 @@
-<!doctype html>
-<html lang="vi">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Ping Pong</title>
-    <style>
-      * {
-        box-sizing: border-box;
-      }
+<main class="wallet-app" id="walletApp">
+  <section class="auth-shell" id="authView">
+    <div class="auth-brand">
+      <div class="brand-lockup">
+        <img src="/favicon.ico" alt="Mini Wallet">
+        <span>Mini-Mini-Wallet</span>
+      </div>
+      <div class="auth-copy">
+        <p class="eyebrow">WEEK 01 PROJECT</p>
+        <h1>Your money,<br>kept simple.</h1>
+        <p class="auth-subtitle">A focused wallet for everyday transfers.</p>
+      </div>
+      <div class="security-note"><span class="status-dot"></span>Session secured</div>
+    </div>
 
-      body {
-        min-height: 100vh;
-        margin: 0;
-        display: grid;
-        place-items: center;
-        background: #f6f7f9;
-        color: #1f2937;
-        font-family: Arial, sans-serif;
-      }
+    <div class="auth-panel">
+      <div class="auth-form-wrap">
+        <div class="auth-tabs" role="tablist" aria-label="Authentication">
+          <button class="auth-tab active" type="button" data-auth-mode="login">Sign in</button>
+          <button class="auth-tab" type="button" data-auth-mode="register">Create account</button>
+        </div>
+        <div class="form-heading">
+          <p class="eyebrow" id="authEyebrow">WELCOME BACK</p>
+          <h2 id="authTitle">Sign in to your wallet</h2>
+        </div>
+        <form id="authForm" novalidate>
+          <label for="authPhone">Phone number</label>
+          <input id="authPhone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="090 123 4567" required>
+          <label for="authPassword">Password</label>
+          <div class="password-field">
+            <input id="authPassword" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+            <button type="button" class="icon-button password-toggle" id="passwordToggle" aria-label="Show password" title="Show password">Show</button>
+          </div>
+          <p class="form-message" id="authMessage" role="status"></p>
+          <button class="primary-button full-button" id="authSubmit" type="submit">Sign in</button>
+        </form>
+      </div>
+    </div>
+  </section>
 
-      main {
-        width: min(100% - 32px, 440px);
-        text-align: center;
-      }
+  <section class="dashboard hidden" id="dashboardView">
+    <aside class="sidebar">
+      <div class="brand-lockup sidebar-brand">
+        <img src="/favicon.ico" alt="Mini Wallet">
+        <span>Mini Wallet</span>
+      </div>
+      <nav aria-label="Wallet navigation">
+        <button type="button" class="nav-item active" data-section="overview"><span class="nav-icon">⌂</span>Overview</button>
+        <button type="button" class="nav-item" data-section="transfer"><span class="nav-icon">↗</span>Transfer</button>
+        <button type="button" class="nav-item" data-section="activity"><span class="nav-icon">≡</span>Activity</button>
+      </nav>
+      <button type="button" class="nav-item logout-button" id="logoutButton"><span class="nav-icon">↪</span>Sign out</button>
+    </aside>
 
-      h1 {
-        margin: 0 0 24px;
-        font-size: 32px;
-        font-weight: 700;
-        letter-spacing: 0;
-      }
+    <div class="dashboard-main">
+      <header class="topbar">
+        <div><p class="eyebrow">PERSONAL WALLET</p><h1>Overview</h1></div>
+        <div class="account-chip">
+          <span class="avatar" id="accountAvatar">MW</span>
+          <div><strong id="accountPhone">Wallet user</strong><span>Active</span></div>
+        </div>
+      </header>
 
-      button {
-        min-width: 112px;
-        min-height: 44px;
-        border: 0;
-        border-radius: 6px;
-        background: #2563eb;
-        color: #fff;
-        font-size: 16px;
-        font-weight: 700;
-        cursor: pointer;
-      }
+      <div class="content-wrap">
+        <section class="balance-band" id="overviewSection">
+          <div><p>Available balance</p><h2 id="balanceValue">0 ₫</h2><span class="balance-caption">Ready to transfer</span></div>
+          <button type="button" class="balance-action" id="quickTransferButton">↗ New transfer</button>
+        </section>
 
-      button:disabled {
-        cursor: wait;
-        opacity: .7;
-      }
+        <div class="workspace-grid">
+          <section class="transfer-panel" id="transferSection">
+            <div class="section-heading">
+              <div><p class="eyebrow">SEND MONEY</p><h2>New transfer</h2></div>
+              <span class="section-mark">↗</span>
+            </div>
+            <form id="transferForm" novalidate>
+              <label for="receiverPhone">Recipient phone</label>
+              <input id="receiverPhone" name="receiverPhone" type="tel" inputmode="numeric" placeholder="090 123 4567" required>
+              <label for="transferAmount">Amount</label>
+              <div class="amount-field">
+                <input id="transferAmount" name="amount" type="number" inputmode="numeric" min="1" step="1" placeholder="0" required>
+                <span>VND</span>
+              </div>
+              <label for="transferNote">Note <span class="optional">Optional</span></label>
+              <input id="transferNote" name="note" type="text" maxlength="120" placeholder="What is this for?">
+              <p class="form-message" id="transferMessage" role="status"></p>
+              <button class="primary-button full-button" id="transferSubmit" type="submit">Send money</button>
+            </form>
+          </section>
 
-      #result {
-        min-height: 24px;
-        margin-top: 18px;
-        font-family: Consolas, monospace;
-        font-size: 15px;
-      }
-    </style>
-  </head>
-  <body>
-    <main>
-      <h1>Ping Pong</h1>
-      <button id="pingBtn" type="button">Ping</button>
-      <div id="result" aria-live="polite"></div>
-    </main>
-
-    <script>
-    (function() {
-      var pingBtn = document.getElementById('pingBtn');
-      var result = document.getElementById('result');
-
-      pingBtn.addEventListener('click', async function() {
-        pingBtn.disabled = true;
-        result.textContent = 'Loading...';
-
-        try {
-          var response = await fetch('/api/v1/ping', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({})
-          });
-          var payload = await response.json();
-          result.textContent = 'err: ' + payload.err + ' | message: ' + payload.message;
-        } catch (error) {
-          result.textContent = 'err: 500 | message: cannot reach backend';
-        } finally {
-          pingBtn.disabled = false;
-        }
-      });
-    })();
-    </script>
-  </body>
-</html>
+          <section class="activity-panel" id="activitySection">
+            <div class="section-heading activity-heading">
+              <div><p class="eyebrow">RECENT ACTIVITY</p><h2>Transactions</h2></div>
+              <button type="button" class="text-button" id="refreshHistory">Refresh</button>
+            </div>
+            <div class="transaction-list" id="transactionList">
+              <div class="empty-state"><span>↔</span><strong>No transactions yet</strong><p>Your wallet activity will appear here.</p></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="toast" id="toast" role="status"></div>
+</main>
