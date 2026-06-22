@@ -23,6 +23,9 @@ module.exports.routes = {
   'POST /api/v1/auth/register' : 'AccessController.register',
   'POST /api/v1/auth/login' : 'AccessController.login',
   'POST /api/v1/auth/logout' : 'AccessController.logout',
+  'POST /api/v1/pocket/balance' : 'PocketController.balance',
+  'POST /api/v1/transaction/transfer' : 'TransactionController.transfer',
+  'POST /api/v1/transaction/history' : 'TransactionController.history',
 
 
 
