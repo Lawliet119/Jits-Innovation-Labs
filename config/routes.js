@@ -26,6 +26,7 @@ module.exports.routes = {
   'POST /api/v1/pocket/balance' : 'PocketController.balance',
   'POST /api/v1/transaction/transfer' : 'TransactionController.transfer',
   'POST /api/v1/transaction/history' : 'TransactionController.history',
+  'POST /api/v1/transaction/bulk-transfer' : 'TransactionController.bulkTransfer',
 
 
 

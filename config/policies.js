@@ -31,7 +31,8 @@ module.exports.policies = {
 
   TransactionController: {
     transfer: 'isLoggedIn',
-    history: 'isLoggedIn'
+    history: 'isLoggedIn',
+    bulkTransfer: 'isLoggedIn'
   },
 
 };

@@ -101,5 +101,82 @@ module.exports = {
       sails.log.error(err);
       return res.serverError();
     }
+  },
+
+  /**
+   * Initiates a bulk transfer from the authenticated customer to multiple receivers.
+   * Designed for merchant use cases such as batch refunds (1-to-N transfers).
+   * All transfers are processed in a single MongoDB transaction — if any fails, all are rolled back.
+   */
+  bulkTransfer: async function(req, res) {
+    var items = req.body.items;
+
+    // Validate that items is a non-empty array
+    if (!Array.isArray(items) || items.length === 0) {
+      return res.error(respCode.BULK_TRANSFER_EMPTY);
+    }
+
+    // Enforce the maximum batch size
+    if (items.length > 50) {
+      return res.error(respCode.BULK_LIMIT_EXCEEDED);
+    }
+
+    // Validate each item and check for duplicate receivers
+    var seenPhones = {};
+    var validatedItems = [];
+
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      var phone = (typeof item.receiverPhone === 'string' ? item.receiverPhone : '').trim();
+      var amount = Number(item.amount);
+      var note = typeof item.note === 'string' ? item.note.trim() : null;
+
+      // Validate phone and amount
+      if (!phone || !Number.isSafeInteger(amount) || amount <= 0) {
+        return res.error(respCode.INVALID_AMOUNT);
+      }
+
+      // Check for duplicate receiver phones within the same batch
+      if (seenPhones[phone]) {
+        return res.error(respCode.BULK_DUPLICATE_RECEIVER);
+      }
+      seenPhones[phone] = true;
+
+      validatedItems.push({
+        receiverPhone: phone,
+        amount: amount,
+        note: note
+      });
+    }
+
+    try {
+      var result = await transferService.executeBulk({
+        senderCustomerId: req.session.customerId,
+        items: validatedItems
+      });
+
+      return res.ok({
+        transactions: result.transactions,
+        totalAmount: result.totalAmount,
+        balance: result.balance
+      });
+    } catch (err) {
+      // Map service-level errors to standard HTTP response codes
+      var codeMap = {
+        RECEIVER_NOT_FOUND: respCode.RECEIVER_NOT_FOUND,
+        CANNOT_TRANSFER_TO_SELF: respCode.CANNOT_TRANSFER_TO_SELF,
+        POCKET_NOT_FOUND: respCode.POCKET_NOT_FOUND,
+        INSUFFICIENT_BALANCE: respCode.INSUFFICIENT_BALANCE,
+        TRANSFER_FAILED: respCode.TRANSFER_FAILED
+      };
+
+      if (codeMap[err.code]) {
+        return res.error(codeMap[err.code]);
+      }
+
+      sails.log.error(err);
+      return res.serverError();
+    }
   }
 };
+

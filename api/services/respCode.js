@@ -48,6 +48,18 @@ module.exports = {
     code: 3005,
     message: 'Transfer failed'
   },
+  BULK_LIMIT_EXCEEDED: {
+    code: 3006,
+    message: 'Bulk transfer exceeds maximum of 50 items'
+  },
+  BULK_TRANSFER_EMPTY: {
+    code: 3007,
+    message: 'Bulk transfer items cannot be empty'
+  },
+  BULK_DUPLICATE_RECEIVER: {
+    code: 3008,
+    message: 'Duplicate receiver phone numbers in bulk transfer'
+  },
   SERVER_ERROR: {
     code: 500,
     message: 'Internal server error'
